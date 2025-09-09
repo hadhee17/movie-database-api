@@ -1,0 +1,35 @@
+{
+  "name": "movie-database-api",
+  "version": "1.0.0",
+  "description": "movie informaion app",
+  "main": "index.js",
+  "scripts": {
+    "development": "nodemon server.js",
+    "production": "set NODE_ENV=production&&nodemon server.js"
+  },
+  "author": "hadhee",
+  "license": "ISC",
+  "devDependencies": {
+    "eslint": "^8.57.1",
+    "eslint-config-airbnb": "^19.0.4",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-import": "^2.32.0",
+    "eslint-plugin-jsx-a11y": "^6.10.2",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-prettier": "^5.5.4",
+    "eslint-plugin-react": "^7.37.5",
+    "prettier": "^3.6.2"
+  },
+  "dependencies": {
+    "axios": "^1.11.0",
+    "bcrypt": "^6.0.0",
+    "cors": "^2.8.5",
+    "dotenv": "^17.2.1",
+    "express": "^5.1.0",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.17.1",
+    "nodemailer": "^7.0.5",
+    "qs": "^6.14.0",
+    "validator": "^13.15.15"
+  }
+}
