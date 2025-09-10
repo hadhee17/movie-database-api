@@ -12,7 +12,7 @@ app.set('query parser', (str) => qs.parse(str));
 app.use(express.json());
 app.use(
   cors({
-    origin: 'http://127.0.0.1:5173', // allow your frontend
+    origin: 'http://localhost:5173', // allow your frontend
     credentials: true,
   }),
 );
