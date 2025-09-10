@@ -94,10 +94,11 @@ exports.getMovieByGenre = async (req, res, next) => {
     req.params.genre.slice(0, 1).toUpperCase() +
     req.params.genre.slice(1).toLowerCase();
 
-  const movies = await movieModel.aggregate([
-    { $unwind: '$genres' },
-    { $match: { genres: genre } },
-  ]);
+  const movies = await movieModel.find({ genres: genre });
+
+  if (movies.length === 0) {
+    return next(new AppError('No movies found for this genre', 404));
+  }
 
   res.status(200).json({
     status: 'Successs',

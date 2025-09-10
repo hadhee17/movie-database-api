@@ -1,21 +1,41 @@
-import { Link } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 
 function Navbar() {
   return (
-    <nav className="bg-white shadow-md p-4 flex justify-between items-center">
-      <Link to="/" className="text-xl font-bold text-blue-600">
-        🎬 Movie Explorer
-      </Link>
-      <div className="flex gap-4">
-        <Link to="/" className="hover:text-blue-500">
-          Home
+    <nav className="bg-[#0f172a]/80 backdrop-blur-md sticky top-0 z-50 shadow-lg">
+      <div className="max-w-7xl mx-auto flex justify-between items-center px-6 py-4">
+        {/* Logo / Brand */}
+        <Link to="/" className="text-2xl font-extrabold text-primary">
+          🎬 MovieVerse
         </Link>
-        <Link to="/login" className="hover:text-blue-500">
-          Login
-        </Link>
-        <Link to="/signup" className="hover:text-blue-500">
-          Signup
-        </Link>
+
+        {/* Links */}
+        <div className="flex gap-6 text-gray-300 font-medium">
+          <NavLink
+            to="/"
+            className={({ isActive }) =>
+              `hover:text-primary transition ${isActive ? "text-primary" : ""}`
+            }
+          >
+            Home
+          </NavLink>
+          <NavLink
+            to="/login"
+            className={({ isActive }) =>
+              `hover:text-primary transition ${isActive ? "text-primary" : ""}`
+            }
+          >
+            Login
+          </NavLink>
+          <NavLink
+            to="/signup"
+            className={({ isActive }) =>
+              `hover:text-primary transition ${isActive ? "text-primary" : ""}`
+            }
+          >
+            Signup
+          </NavLink>
+        </div>
       </div>
     </nav>
   );

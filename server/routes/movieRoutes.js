@@ -12,6 +12,7 @@ Router.route('/highest-rated').get(
 Router.route('/get-movie/:title').get(movieController.getOneMovie);
 
 Router.route('/get-by-genre/:genre').get(movieController.getMovieByGenre);
+
 Router.route('/top-genres').get(movieController.TopGenres);
 
 Router.route('/movie/:id').get(movieController.getMovie);
