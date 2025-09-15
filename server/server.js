@@ -11,4 +11,8 @@ const connection = async () => {
 };
 connection();
 
+app.use('/', (req, res) => {
+  res.send('Hello from movie database api');
+});
+
 app.listen(port, () => console.log(`App running in port:${port}`));
