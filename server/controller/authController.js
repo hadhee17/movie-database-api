@@ -17,6 +17,22 @@ const jwtToken = (id) => {
 
 const createResponseToken = (user, statusCode, res) => {
   const token = jwtToken(user._id);
+  //adding cookie option
+
+  const cookieOptions = {
+    expires: new Date(
+      Date.now() + process.env.JWT_EXPIRES_IN * 24 * 60 * 60 * 1000,
+    ),
+    httpOnly: true,
+  };
+
+  if (process.env.NODE_ENV === 'production') {
+    cookieOptions.secure = true;
+  }
+
+  res.cookie('jwt', token, cookieOptions);
+  // const cookieHeader = res.getHeader('Set-Cookie');
+  // console.log('Set-Cookie Header:', cookieHeader);
 
   //remove password from showing to output
   user.password = undefined;
@@ -25,6 +41,8 @@ const createResponseToken = (user, statusCode, res) => {
     status: 'Success',
     result: user.length,
     token,
+    // cookieHeader,
+
     data: {
       user,
     },
@@ -65,6 +83,15 @@ exports.login = async (req, res, next) => {
   createResponseToken(user, 200, res);
 };
 
+//logout
+
+exports.logout = (req, res, next) => {
+  res.cookie('jwt', 'loggedout', {
+    expires: new Date(Date.now() + 10 * 1000),
+    httpOnly: true,
+  });
+  res.status(200).json({ status: 'success' });
+};
 //protect route
 exports.protect = async (req, res, next) => {
   let token;

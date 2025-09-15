@@ -6,6 +6,7 @@ const Router = express.Router();
 
 Router.route('/signup').post(authController.signup);
 Router.route('/login').post(authController.login);
+Router.route('/logout').get(authController.logout);
 Router.route('/all-users').get(userController.getAllusers);
 Router.route('/update-me').patch(
   authController.protect,

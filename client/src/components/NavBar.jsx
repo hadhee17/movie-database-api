@@ -1,6 +1,15 @@
-import { Link, NavLink } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 
 function Navbar() {
+  const { user, logout } = useAuth();
+  const navigate = useNavigate();
+
+  const handleLogout = async () => {
+    await logout();
+    navigate("/"); // redirect to home
+  };
+
   return (
     <nav className="bg-[#0f172a]/80 backdrop-blur-md sticky top-0 z-50 shadow-lg">
       <div className="max-w-7xl mx-auto flex justify-between items-center px-6 py-4">
@@ -19,22 +28,38 @@ function Navbar() {
           >
             Home
           </NavLink>
-          <NavLink
-            to="/login"
-            className={({ isActive }) =>
-              `hover:text-primary transition ${isActive ? "text-primary" : ""}`
-            }
-          >
-            Login
-          </NavLink>
-          <NavLink
-            to="/signup"
-            className={({ isActive }) =>
-              `hover:text-primary transition ${isActive ? "text-primary" : ""}`
-            }
-          >
-            Signup
-          </NavLink>
+
+          {user ? (
+            <button
+              onClick={handleLogout}
+              className="hover:text-red-400 transition font-semibold"
+            >
+              Logout
+            </button>
+          ) : (
+            <>
+              <NavLink
+                to="/login"
+                className={({ isActive }) =>
+                  `hover:text-primary transition ${
+                    isActive ? "text-primary" : ""
+                  }`
+                }
+              >
+                Login
+              </NavLink>
+              <NavLink
+                to="/signup"
+                className={({ isActive }) =>
+                  `hover:text-primary transition ${
+                    isActive ? "text-primary" : ""
+                  }`
+                }
+              >
+                Signup
+              </NavLink>
+            </>
+          )}
         </div>
       </div>
     </nav>
