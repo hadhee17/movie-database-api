@@ -12,7 +12,7 @@ app.set('query parser', (str) => qs.parse(str));
 app.use(express.json());
 app.use(
   cors({
-    origin: 'https://movie-database-api-frontend.vercel.app/', // allow your frontend
+    origin: 'https://movie-database-api-frontend.vercel.app', // allow your frontend
     credentials: true,
   }),
 );
