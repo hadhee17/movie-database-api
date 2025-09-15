@@ -10,9 +10,13 @@ const app = express();
 
 app.set('query parser', (str) => qs.parse(str));
 app.use(express.json());
+const allowedOrigins = [
+  'http://localhost:3000', // local Vite dev server
+  'https://your-frontend.vercel.app', // deployed frontend
+];
 app.use(
   cors({
-    origin: 'https://movie-database-api-frontend.vercel.app', // allow your frontend
+    origin: allowedOrigins, // allow your frontend
     credentials: true,
   }),
 );
