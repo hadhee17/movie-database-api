@@ -2,7 +2,6 @@ const express = require('express');
 const movieRoute = require('./routes/movieRoutes');
 const userRoutes = require('./routes/userRoutes');
 const reviewRoute = require('./routes/reviewRoutes');
-const aiSearch = require('./controller/aiSearchController');
 const globalErrorController = require('./controller/errorController');
 const AppError = require('./utils/AppError');
 const qs = require('qs');
@@ -12,7 +11,7 @@ const app = express();
 app.set('query parser', (str) => qs.parse(str));
 app.use(express.json());
 const allowedOrigins = [
-  'https://movie-database-api-frontend.vercel.app/', // local Vite dev server
+  'https://movie-database-api-frontend.vercel.app', // local Vite dev server
   // deployed frontend
 ];
 app.use(
@@ -22,7 +21,6 @@ app.use(
   }),
 );
 
-app.use('/', aiSearch);
 app.use('/api/v1/movies', movieRoute);
 app.use('/api/v1/users', userRoutes);
 app.use('/api/v1/review', reviewRoute);
