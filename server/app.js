@@ -12,7 +12,7 @@ const app = express();
 app.set('query parser', (str) => qs.parse(str));
 app.use(express.json());
 const allowedOrigins = [
-  'https://movie-database-api-frontend.vercel.app/', // local Vite dev server
+  'https://movie-database-api-frontend.vercel.app', // local Vite dev server
   // deployed frontend
 ];
 app.use(
