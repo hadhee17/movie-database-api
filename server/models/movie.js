@@ -27,6 +27,10 @@ const movieSchema = new mongoose.Schema(
     imageUrl: {
       type: String,
     },
+    embedding: {
+      type: [Number],
+      index: '2dsphere',
+    },
   },
   {
     toJSON: { virtuals: true },

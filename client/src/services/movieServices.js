@@ -1,5 +1,6 @@
 import api from "./api";
 
+
 export async function getMovies() {
   const res = await api.get("/movies/all-movies");
   return res.data.data.doc;
