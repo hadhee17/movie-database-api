@@ -15,7 +15,7 @@ function MovieCard({ movie }) {
         <img
           src={movie.imageUrl}
           alt={movie.title}
-          className="w-full h-64 object-cover group-hover:opacity-90"
+          className="w-full h-82 object-cover group-hover:opacity-90"
         />
         {/* Rating badge */}
         <div className="absolute bottom-2 right-2 bg-[#0f172a]/80 text-yellow-400 text-xs px-2 py-1 rounded">

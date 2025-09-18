@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { getMovieById } from "../services/movieServices";
+import Reviews from "../components/Reviews";
 
 function MoviePage() {
   const { id } = useParams();
@@ -63,6 +64,9 @@ function MoviePage() {
           </div>
         </div>
       </div>
+
+      {/* Reviews Section */}
+      <Reviews movieId={id} />
     </div>
   );
 }

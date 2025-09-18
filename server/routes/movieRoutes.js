@@ -25,6 +25,5 @@ Router.route('/delete-movie/:id').delete(
 
 // re-routing using reviewRouter for moview review
 Router.use('/:movieId', reviewRoute);
-Router.use('/:movieId', reviewRoute);
 
 module.exports = Router;

@@ -10,7 +10,7 @@ exports.createReview = async (req, res, next) => {
 
   res.status(201).json({
     Status: 'Success',
-    result: newReview.length,
+
     data: {
       newReview,
     },
@@ -22,6 +22,18 @@ exports.getAllReview = async (req, res, next) => {
   if (req.params.movieId) filter = { movie: req.params.movieId };
 
   const review = await ReviewModel.find(filter);
+
+  res.status(200).json({
+    Status: 'Success',
+    result: review.length,
+    data: {
+      review,
+    },
+  });
+};
+
+exports.getReviewById = async (req, res, next) => {
+  const review = await ReviewModel.find({ movie: req.params.id });
 
   res.status(200).json({
     Status: 'Success',

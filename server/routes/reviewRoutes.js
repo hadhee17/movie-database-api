@@ -4,6 +4,7 @@ const authController = require('../controller/authController');
 
 const Router = express.Router({ mergeParams: true });
 
+Router.route('/get-review/:id').get(reviewController.getReviewById);
 Router.route('/create-review').post(
   authController.protect,
   authController.restrictTo('user'),

@@ -6,12 +6,15 @@ const globalErrorController = require('./controller/errorController');
 const AppError = require('./utils/AppError');
 const qs = require('qs');
 const cors = require('cors');
+const cookieParser = require('cookie-parser');
 const app = express();
+
+app.use(cookieParser());
 
 app.set('query parser', (str) => qs.parse(str));
 app.use(express.json());
 const allowedOrigins = [
-  'https://movie-database-api-frontend.vercel.app', // local Vite dev server
+  'http://localhost:5173', // local Vite dev server
   // deployed frontend
 ];
 app.use(

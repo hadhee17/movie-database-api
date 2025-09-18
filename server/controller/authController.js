@@ -11,7 +11,7 @@ const jwtToken = (id) => {
       id,
     },
     process.env.JWT_SECRET,
-    { expiresIn: process.env.JWT_EXPIRES_IN },
+    { expiresIn: `${process.env.JWT_EXPIRES_IN}d` },
   );
 };
 
@@ -96,36 +96,46 @@ exports.logout = (req, res, next) => {
 exports.protect = async (req, res, next) => {
   let token;
 
+  // 1) Get token from Authorization header OR cookie
   if (
     req.headers.authorization &&
     req.headers.authorization.startsWith('Bearer')
   ) {
     token = req.headers.authorization.split(' ')[1];
+  } else if (req.cookies.jwt) {
+    token = req.cookies.jwt; // ✅ read from cookie
   }
 
+  // 2) No token found
   if (!token) {
     return next(new AppError('You are not logged in to get access', 401));
   }
 
-  //verification
-  const decoded = await promisify(jwt.verify)(token, process.env.JWT_SECRET);
+  try {
+    // 3) Verify token
+    const decoded = await promisify(jwt.verify)(token, process.env.JWT_SECRET);
 
-  //check user still exist
-  const currentUser = await User.findById(decoded.id);
-  if (!currentUser) {
-    return next(
-      new AppError('The user belonging to token no longer exists', 401),
-    );
+    // 4) Check if user still exists
+    const currentUser = await User.findById(decoded.id);
+    if (!currentUser) {
+      return next(
+        new AppError('The user belonging to this token no longer exists', 401),
+      );
+    }
+
+    // 5) Check if user changed password after token was issued
+    if (currentUser.changePasswordAfter(decoded.iat)) {
+      return next(
+        new AppError('User recently changed password. Please login again', 401),
+      );
+    }
+
+    // 6) Grant access
+    req.user = currentUser;
+    next();
+  } catch (err) {
+    return next(new AppError('Invalid or expired token', 401));
   }
-
-  if (currentUser.changePasswordAfter(decoded.iat)) {
-    return next(
-      new AppError('User recently changed password.please login again'),
-    );
-  }
-
-  req.user = currentUser;
-  next();
 };
 
 exports.restrictTo = (...role) => {

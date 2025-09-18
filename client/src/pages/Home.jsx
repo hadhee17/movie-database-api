@@ -9,25 +9,57 @@ import {
 
 function Home() {
   const [movies, setMovies] = useState([]);
+  const [allMovies, setAllMovies] = useState([]); // ✅ keep all for search
   const [genres, setGenres] = useState([]);
-  const [selectedGenre, setSelectedGenre] = useState(null);
+  const [selectedGenre, setSelectedGenre] = useState("All");
+  const [searchQuery, setSearchQuery] = useState("");
 
   useEffect(() => {
     // fetch all movies initially
-    getMovies().then(setMovies).catch(console.error);
+    getMovies()
+      .then((data) => {
+        setMovies(data);
+        setAllMovies(data); // keep a copy for search
+      })
+      .catch(console.error);
+
     getGenreStats().then(setGenres).catch(console.error);
   }, []);
 
-  // handle genre selection
+  // ✅ Handle genre selection
   const handleGenreClick = async (genre) => {
     setSelectedGenre(genre);
+    setSearchQuery(""); // reset search when changing genre
 
     if (genre === "All") {
-      // reset back to all movies
-      getMovies().then(setMovies).catch(console.error);
+      getMovies()
+        .then((data) => {
+          setMovies(data);
+          setAllMovies(data);
+        })
+        .catch(console.error);
     } else {
-      // fetch movies by genre from backend
-      getMoviesByGenre(genre).then(setMovies).catch(console.error);
+      getMoviesByGenre(genre)
+        .then((data) => {
+          setMovies(data);
+          setAllMovies(data); // refresh list for search
+        })
+        .catch(console.error);
+    }
+  };
+
+  // ✅ Handle search (case-insensitive)
+  const handleSearch = (e) => {
+    const query = e.target.value;
+    setSearchQuery(query);
+
+    if (!query.trim()) {
+      setMovies(allMovies); // reset to genre list if empty search
+    } else {
+      const filtered = allMovies.filter((m) =>
+        m.title.toLowerCase().includes(query.toLowerCase())
+      );
+      setMovies(filtered);
     }
   };
 
@@ -51,6 +83,8 @@ function Home() {
       <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
         <input
           type="text"
+          value={searchQuery}
+          onChange={handleSearch}
           placeholder="Search movies..."
           className="px-4 py-3 w-full sm:w-1/2 rounded-xl 
                      bg-[#1e293b] text-gray-200 
@@ -62,10 +96,10 @@ function Home() {
             <button
               key={genre}
               onClick={() => handleGenreClick(genre)}
-              className={`px-4 py-2 rounded-full font-medium transition
+              className={`px-4 py-2 rounded-full font-medium transition transform
                 ${
                   selectedGenre === genre
-                    ? "bg-primary text-dark"
+                    ? "bg-primary text-dark scale-105 shadow-lg"
                     : "bg-secondary/80 text-white hover:bg-secondary"
                 }`}
             >
@@ -75,31 +109,25 @@ function Home() {
         </div>
       </div>
 
-      {/* 📊 Popular Genres */}
-      <section>
-        <h2 className="text-2xl font-bold text-black mb-6">Popular Genres</h2>
-        <GenreStats genres={genres} />
-      </section>
+      {/* 📊 Popular Genres → hidden when searching */}
+      {!searchQuery && (
+        <section>
+          <h2 className="text-2xl font-bold text-black mb-6">Popular Genres</h2>
+          <GenreStats genres={genres} />
+        </section>
+      )}
 
       {/* 🎥 Movies */}
       <section>
         <h2 className="text-2xl font-bold text-black mb-6">
-          {selectedGenre && selectedGenre !== "All"
+          {searchQuery
+            ? `Search Results for "${searchQuery}"`
+            : selectedGenre && selectedGenre !== "All"
             ? `${selectedGenre} Movies`
             : "All Movies"}
         </h2>
         <MovieList movies={movies} />
       </section>
-
-      {/* ⭐ Reviews Button */}
-      <div className="text-center">
-        <button
-          className="px-6 py-3 bg-primary text-dark font-semibold rounded-xl shadow 
-                           hover:bg-yellow-400 transition"
-        >
-          See All Reviews
-        </button>
-      </div>
     </div>
   );
 }
