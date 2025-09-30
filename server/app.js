@@ -12,7 +12,9 @@ app.use(cookieParser());
 
 app.set('query parser', (str) => qs.parse(str));
 const allowedOrigins = [
-  'http://localhost:5173', // local Vite dev server
+  'http://localhost:5173',
+  'https://movie-database-api-frontend.vercel.app/',
+  //  // local Vite dev server
   // deployed frontend
 ];
 app.use(
