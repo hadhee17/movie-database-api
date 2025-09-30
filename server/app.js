@@ -13,7 +13,7 @@ app.use(cookieParser());
 const allowedOrigins = [
   'http://localhost:5173', // Vite dev server (adjust if different)
   // optional
-  'https://movie-database-api-zeta.vercel.app', // deployed frontend (no trailing slash)
+  'https://movie-database-api-zpam.vercel.app', // deployed frontend (no trailing slash)
   // add any other exact origins here
 ];
 
