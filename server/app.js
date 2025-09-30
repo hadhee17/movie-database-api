@@ -28,7 +28,7 @@ app.use('/api/v1/movies', movieRoute);
 app.use('/api/v1/users', userRoutes);
 app.use('/api/v1/review', reviewRoute);
 
-app.get('/', (req, res) => {
+app.use('/', (req, res) => {
   res.json({ message: 'Hello from movie database api' });
 });
 
