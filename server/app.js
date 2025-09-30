@@ -28,10 +28,6 @@ app.use('/api/v1/movies', movieRoute);
 app.use('/api/v1/users', userRoutes);
 app.use('/api/v1/review', reviewRoute);
 
-app.use('/', (req, res) => {
-  res.json({ message: 'Hello from movie database api' });
-});
-
 app.all('/*catchall', (req, res, next) => {
   next(new AppError(`cant find ${req.originalUrl} on the server`, 404));
 });

@@ -10,5 +10,8 @@ const connection = async () => {
   await connectDB();
 };
 connection();
+app.use('/', (req, res) => {
+  res.json({ message: 'Hello from movie database api' });
+});
 
 app.listen(port, () => console.log(`App running in port:${port}`));
