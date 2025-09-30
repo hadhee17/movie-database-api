@@ -10,9 +10,9 @@ const cookieParser = require('cookie-parser');
 const app = express();
 app.use(cookieParser());
 
+app.set('query parser', (str) => qs.parse(str));
 const allowedOrigins = [
-  'https://movie-database-api-zpam.vercel.app/',
-  'http://localhost:5173', // local Vite dev server
+  'https://movie-database-api-zpam.vercel.app', // local Vite dev server
   // deployed frontend
 ];
 app.use(
@@ -26,7 +26,6 @@ app.use(cors(corsOptions));
 // ensure preflight uses same options
 app.options('*', cors(corsOptions));
 
-app.set('query parser', (str) => qs.parse(str));
 app.use(express.json());
 
 app.use('/api/v1/movies', movieRoute);
