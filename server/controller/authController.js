@@ -21,7 +21,8 @@ const createResponseToken = (user, statusCode, res) => {
       Date.now() + process.env.JWT_EXPIRES_IN * 24 * 60 * 60 * 1000,
     ),
     httpOnly: true, // cannot access in JS
-    sameSite: 'none', // ✅ required for cross-site cookies
+    secure: false,
+    sameSite: 'lax', // ✅ required for cross-site cookies
     secure: process.env.NODE_ENV === 'production', // ✅ only on HTTPS
   };
 
