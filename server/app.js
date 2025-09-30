@@ -12,7 +12,9 @@ app.use(cookieParser());
 
 app.set('query parser', (str) => qs.parse(str));
 const allowedOrigins = [
-  'https://movie-database-api-zpam.vercel.app', // local Vite dev server
+  'https://movie-database-api-zpam.vercel.app',
+  'http://localhost:5173',
+  //  // local Vite dev server
   // deployed frontend
 ];
 app.use(
@@ -23,6 +25,11 @@ app.use(
 );
 
 app.use(express.json());
+
+// Add health check route
+app.get('/', (req, res) => {
+  res.json({ message: 'Hello from movie database api' });
+});
 
 app.use('/api/v1/movies', movieRoute);
 app.use('/api/v1/users', userRoutes);
