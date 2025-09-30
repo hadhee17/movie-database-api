@@ -12,64 +12,17 @@ app.use(cookieParser());
 
 app.set('query parser', (str) => qs.parse(str));
 const allowedOrigins = [
-  'https://movie-database-api-zpam.vercel.app',
-  'http://localhost:5173',
-  //  // local Vite dev server
+  'http://localhost:5173', // local Vite dev server
   // deployed frontend
 ];
-
-// Enhanced CORS configuration for preflight requests
 app.use(
   cors({
-    origin: function (origin, callback) {
-      // Allow requests with no origin (like mobile apps or curl requests)
-      if (!origin) return callback(null, true);
-
-      if (allowedOrigins.indexOf(origin) !== -1) {
-        callback(null, true);
-      } else {
-        console.log('CORS blocked origin:', origin);
-        callback(new Error('Not allowed by CORS'));
-      }
-    },
+    origin: allowedOrigins, // allow your frontend
     credentials: true,
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
-    allowedHeaders: [
-      'Content-Type',
-      'Authorization',
-      'X-Requested-With',
-      'Accept',
-      'Origin',
-      'Access-Control-Request-Method',
-      'Access-Control-Request-Headers',
-    ],
-    exposedHeaders: ['Content-Range', 'X-Content-Range'],
-    optionsSuccessStatus: 200, // some legacy browsers (IE11, various SmartTVs) choke on 204
-    preflightContinue: false, // Let CORS handle preflight
   }),
 );
 
-// Handle preflight requests explicitly
-app.options('/*catch', (req, res) => {
-  res.header('Access-Control-Allow-Origin', req.headers.origin);
-  res.header(
-    'Access-Control-Allow-Methods',
-    'GET, POST, PUT, DELETE, PATCH, OPTIONS',
-  );
-  res.header(
-    'Access-Control-Allow-Headers',
-    'Content-Type, Authorization, X-Requested-With, Accept, Origin',
-  );
-  res.header('Access-Control-Allow-Credentials', 'true');
-  res.status(200).end();
-});
-
 app.use(express.json());
-
-// Add health check route
-app.get('/', (req, res) => {
-  res.json({ message: 'Hello from movie database api' });
-});
 
 app.use('/api/v1/movies', movieRoute);
 app.use('/api/v1/users', userRoutes);
