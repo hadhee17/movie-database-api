@@ -18,7 +18,7 @@ const allowedOrigins = [
   // deployed frontend
 ];
 
-// Enhanced CORS configuration
+// Enhanced CORS configuration for preflight requests
 app.use(
   cors({
     origin: function (origin, callback) {
@@ -28,6 +28,7 @@ app.use(
       if (allowedOrigins.indexOf(origin) !== -1) {
         callback(null, true);
       } else {
+        console.log('CORS blocked origin:', origin);
         callback(new Error('Not allowed by CORS'));
       }
     },
@@ -39,11 +40,29 @@ app.use(
       'X-Requested-With',
       'Accept',
       'Origin',
+      'Access-Control-Request-Method',
+      'Access-Control-Request-Headers',
     ],
     exposedHeaders: ['Content-Range', 'X-Content-Range'],
     optionsSuccessStatus: 200, // some legacy browsers (IE11, various SmartTVs) choke on 204
+    preflightContinue: false, // Let CORS handle preflight
   }),
 );
+
+// Handle preflight requests explicitly
+app.options('/*catch', (req, res) => {
+  res.header('Access-Control-Allow-Origin', req.headers.origin);
+  res.header(
+    'Access-Control-Allow-Methods',
+    'GET, POST, PUT, DELETE, PATCH, OPTIONS',
+  );
+  res.header(
+    'Access-Control-Allow-Headers',
+    'Content-Type, Authorization, X-Requested-With, Accept, Origin',
+  );
+  res.header('Access-Control-Allow-Credentials', 'true');
+  res.status(200).end();
+});
 
 app.use(express.json());
 
