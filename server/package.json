@@ -4,7 +4,7 @@
   "description": "movie informaion app",
   "main": "index.js",
   "scripts": {
-    "development": "nodemon server.js",
+    "development": "node server.js",
     "production": "set NODE_ENV=production&&nodemon server.js"
   },
   "author": "hadhee",
