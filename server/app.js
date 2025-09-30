@@ -15,7 +15,7 @@ app.set('query parser', (str) => qs.parse(str));
 app.use(express.json());
 const allowedOrigins = [
   'http://localhost:5173',
-  'https://movie-database-api-zpam.vercel.app', // local Vite dev server
+  'https://movie-database-api-zpam.vercel.app/', // local Vite dev server
   // deployed frontend
 ];
 app.use(
