@@ -8,21 +8,31 @@ const qs = require('qs');
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
 const app = express();
-
 app.use(cookieParser());
 
-app.set('query parser', (str) => qs.parse(str));
-app.use(express.json());
 const allowedOrigins = [
-  'https://movie-database-api-zpam.vercel.app', // local Vite dev server
+  'https://movie-database-api-zpam.vercel.app/', // local Vite dev server
   // deployed frontend
 ];
+
 app.use(
   cors({
-    origin: allowedOrigins, // allow your frontend
+    origin: function (origin, callback) {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error('Not allowed by CORS'));
+      }
+    },
     credentials: true,
   }),
 );
+
+// Handle preflight
+app.options('*', cors());
+
+app.set('query parser', (str) => qs.parse(str));
+app.use(express.json());
 
 app.use('/api/v1/movies', movieRoute);
 app.use('/api/v1/users', userRoutes);
