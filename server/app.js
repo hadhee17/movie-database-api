@@ -11,23 +11,16 @@ const app = express();
 app.use(cookieParser());
 
 const allowedOrigins = [
-  'http://localhost:5173', // Vite dev server (adjust if different)
-  // optional
-  'https://movie-database-api-zpam.vercel.app', // deployed frontend (no trailing slash)
-  // add any other exact origins here
+  'https://movie-database-api-zpam.vercel.app/',
+  'http://localhost:5173', // local Vite dev server
+  // deployed frontend
 ];
-
-const corsOptions = {
-  origin: function (origin, callback) {
-    // allow requests with no origin (mobile apps, curl, server-to-server)
-    if (!origin) return callback(null, true);
-    if (allowedOrigins.includes(origin)) {
-      return callback(null, true);
-    }
-    return callback(new Error('Not allowed by CORS'));
-  },
-  credentials: true,
-};
+app.use(
+  cors({
+    origin: allowedOrigins, // allow your frontend
+    credentials: true,
+  }),
+);
 
 app.use(cors(corsOptions));
 // ensure preflight uses same options
