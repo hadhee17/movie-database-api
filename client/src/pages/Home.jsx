@@ -13,38 +13,40 @@ function Home() {
   const [genres, setGenres] = useState([]);
   const [selectedGenre, setSelectedGenre] = useState("All");
   const [searchQuery, setSearchQuery] = useState("");
+  const [loading, setLoading] = useState(true); // ✅ loading state
 
   useEffect(() => {
-    // fetch all movies initially
-    getMovies()
-      .then((data) => {
-        setMovies(data);
-        setAllMovies(data); // keep a copy for search
+    setLoading(true);
+    Promise.all([getMovies(), getGenreStats()])
+      .then(([movieData, genreData]) => {
+        setMovies(movieData);
+        setAllMovies(movieData);
+        setGenres(genreData);
       })
-      .catch(console.error);
-
-    getGenreStats().then(setGenres).catch(console.error);
+      .catch(console.error)
+      .finally(() => setLoading(false)); // ✅ stop loading after fetching
   }, []);
 
   // ✅ Handle genre selection
   const handleGenreClick = async (genre) => {
     setSelectedGenre(genre);
-    setSearchQuery(""); // reset search when changing genre
+    setSearchQuery("");
+    setLoading(true);
 
-    if (genre === "All") {
-      getMovies()
-        .then((data) => {
-          setMovies(data);
-          setAllMovies(data);
-        })
-        .catch(console.error);
-    } else {
-      getMoviesByGenre(genre)
-        .then((data) => {
-          setMovies(data);
-          setAllMovies(data); // refresh list for search
-        })
-        .catch(console.error);
+    try {
+      if (genre === "All") {
+        const data = await getMovies();
+        setMovies(data);
+        setAllMovies(data);
+      } else {
+        const data = await getMoviesByGenre(genre);
+        setMovies(data);
+        setAllMovies(data);
+      }
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -54,7 +56,7 @@ function Home() {
     setSearchQuery(query);
 
     if (!query.trim()) {
-      setMovies(allMovies); // reset to genre list if empty search
+      setMovies(allMovies);
     } else {
       const filtered = allMovies.filter((m) =>
         m.title.toLowerCase().includes(query.toLowerCase())
@@ -110,7 +112,7 @@ function Home() {
       </div>
 
       {/* 📊 Popular Genres → hidden when searching */}
-      {!searchQuery && (
+      {!searchQuery && !loading && (
         <section>
           <h2 className="text-2xl font-bold text-black mb-6">Popular Genres</h2>
           <GenreStats genres={genres} />
@@ -126,7 +128,15 @@ function Home() {
             ? `${selectedGenre} Movies`
             : "All Movies"}
         </h2>
-        <MovieList movies={movies} />
+
+        {/* 🌀 Loading Indicator */}
+        {loading ? (
+          <div className="flex justify-center items-center py-20 text-gray-500 text-lg font-medium">
+            Loading movies...
+          </div>
+        ) : (
+          <MovieList movies={movies} />
+        )}
       </section>
     </div>
   );

@@ -21,9 +21,10 @@ const createResponseToken = (user, statusCode, res) => {
       Date.now() + process.env.JWT_EXPIRES_IN * 24 * 60 * 60 * 1000,
     ),
     httpOnly: true, // cannot access in JS
-    secure: false,
-    sameSite: 'lax', // ✅ required for cross-site cookies
-    secure: process.env.NODE_ENV === 'production', // ✅ only on HTTPS
+    // secure: false,
+    secure: true,
+    sameSite: 'none', // ✅ required for cross-site cookies
+    // ✅ only on HTTPS
   };
 
   res.cookie('jwt', token, cookieOptions);
@@ -80,7 +81,8 @@ exports.logout = (req, res, next) => {
     expires: new Date(Date.now() + 10 * 1000),
     httpOnly: true,
     sameSite: 'none',
-    secure: process.env.NODE_ENV === 'production',
+    secure: true,
+    // secure: process.env.NODE_ENV === 'production',
   });
   res.status(200).json({ status: 'success' });
 };
