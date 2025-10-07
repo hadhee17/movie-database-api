@@ -16,3 +16,8 @@ export async function signup(name, email, password, passwordConfirm) {
   console.log(res);
   return res.data.data.user;
 }
+
+export async function getCurrentUser() {
+  const res = await api.get("/users/get-me");
+  return res.data.data.doc;
+}
