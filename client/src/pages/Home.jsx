@@ -131,7 +131,7 @@ function Home() {
 
         {/* 🌀 Loading Indicator */}
         {loading ? (
-          <div className="flex justify-center items-center py-20 text-gray-500 text-lg font-medium">
+          <div className="flex justify-center items-center py-20 text-white text-lg font-medium">
             Loading movies...
           </div>
         ) : (
